@@ -1,41 +1,33 @@
 /*
- * Object representing the (un)hidden word.
+ * Object representing the word to guess.
  */
-
-// eslint-disable-next-line no-unused-vars
 function VisibleWordBoard() {
-  //set hidden word in the correct div element
   this.setWord = function(visibleWord) {
-    console.assert(
-      Array.isArray(visibleWord) || typeof visibleWord == "string",
-      "Expecting an array, got a %s instead"
-    );
-
-    if (Array.isArray(visibleWord)) {
-      document.getElementById("hiddenWord").innerHTML = visibleWord.join("");
-    } else {
-      document.getElementById("hiddenWord").innerHTML = visibleWord;
-    }
+    document.getElementById("word").innerHTML = (Array.isArray(visibleWord) ? visibleWord.join("") : visibleWord);
   };
 }
 
 /*
- * Function creating the necessary balloons;
- * a number between 1 and 8 is expected in config.js
+ * Function creating the necessary balloons.
  */
-
-// eslint-disable-next-line no-unused-vars
 function createBalloons() {
+
+  let colors = ['lightsalmon','darksalmon','salmon','lightcoral','indianred','crimson','firebrick','red','darkred'];
+  let colorPick = 0;
+
   let div = document.getElementById("balloons");
-  let colorStart = 111;
-  //add balloon elements, starting at the highest id (in sync with other code pieces)
-  // eslint-disable-next-line no-undef
+  let size = 0.8 * 40 / Setup.MAX_ALLOWED_GUESSES;//40vw total width, leave some room (thus x0.8)
+
+  div.style.gridTemplateColumns = `repeat(${Setup.MAX_ALLOWED_GUESSES}, ${size}vw)`;
+
+  //add balloon elements
   for (let i = Setup.MAX_ALLOWED_GUESSES; i >= 1; i--) {
     let b = document.createElement("div");
     b.className = "balloon";
     b.setAttribute("id", "b" + i);
-    b.style.backgroundColor = "#" + colorStart;
-    colorStart += 111;
+    b.style.backgroundColor = colors[colorPick++%colors.length];
+    b.style.height = `${size}vw`;
+    b.style.width = `${size}vw`;
     div.appendChild(b);
   }
 }
@@ -43,10 +35,8 @@ function createBalloons() {
 /*
  * Object representing the status bar.
  */
-
-// eslint-disable-next-line no-unused-vars
 function StatusBar() {
   this.setStatus = function(status) {
-    document.getElementById("statusbar").innerHTML = status;
+    document.getElementById("status").innerHTML = status;
   };
 }
