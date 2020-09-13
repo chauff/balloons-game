@@ -1,132 +1,96 @@
 @import "style.css";
 
+main {
+  display: grid;
+  grid-template-columns: 60vw 40vw;
+  grid-template-rows: 0.5fr 0.5fr 100px;
+  box-sizing: border-box;
+  color: var(--text);
+  font-family: 'Bungee Shade', cursive;
+
+}
+
+.centerXY {
+  /* we are cheating a bit here: within CSS grid the horizontal and vertical
+     alignment of text is not easy; flex is a display type that handles this
+     easily 
+  */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 100%;
+}
+
+.justify {
+  display: flex;
+  justify-content: center;
+}
+
 #alphabet {
-  float: left;
-  width: 50%;
-  background-color: #ddd;
+  grid-row: 1/4;
+  background-color: var(--lightBG);
+  display: grid;
+  grid-template-columns: repeat(6, 8vw);
+  grid-template-rows: repeat(5, 17vh);
+  gap: 20px;
+  padding-top: 10px;
+  box-sizing: border-box;
+  border-right: 5px dashed var(--lightHighlight);
 }
 
-.alphabet {
-  position: relative;
-  width: 8%;
-  height: 8%;
-  background-color: #aaa;
-  display: inline-block;
-  margin: 20px;
-  border: 2px solid black;
-  border-radius: 5px;
-
-  text-align: center;
+.letter {
+  background-color: var(--darkHighlight);
+  border: 5px solid white;
+  border-radius: 10px;
   font-size: 250%;
-  padding: 10px;
-
-  border-color: #fff;
-  box-shadow: 0 15px 10px -10px rgba(31, 31, 31, 0.5);
+  padding-left: 10px;
+  box-shadow: 20px 20px 10px -10px rgba(31, 31, 31, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.alphabet:hover {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
-    0 0 40px rgba(128, 128, 128, 0.1) inset;
+.letter:hover {
+  box-shadow: none;
+  background-color: var(--lightHighlight);
 }
 
-.alphabetDisabled {
+.letter.disabled {
   border: 2px solid #bbb;
   background-color: transparent;
   box-shadow: none;
-}
-.alphabetDisabled:hover {
-  box-shadow: none;
-}
-.alphabetUsed {
-  border: 2px solid #bbb;
-  background-color: #ccc;
-  box-shadow: none;
-}
-
-.alphabetUsed:hover {
-  box-shadow: none;
-}
-
-#word {
-  float: left;
-  width: 50%;
-  height: 50%;
-  background-color: #aaa;
-
-  font-size: 500%;
-  color: var(--main-red);
-  text-align: center;
-}
-
-#hiddenWord {
-  font-family: monaco, Bitstream Vera Sans Mono, monospace;
-  display: inline-block;
-  vertical-align: middle;
-  line-height: 500%;
-}
-
-#status {
-  float: left;
-  width: 50%;
-  height: 5%;
-  background-color: #222;
-  font-family: monaco, Bitstream Vera Sans Mono, monospace;
-  color: var(--status-red);
-  font-size: 75%;
-  vertical-align: middle;
-}
-
-#statusbar {
-  display: inline-block;
-  vertical-align: middle;
-  padding: 15px;
-  margin: 0 auto;
-  overflow: hidden;
-  white-space: nowrap;
-  animation: typing 5s steps(40, end);
-  letter-spacing: 0.1em;
-}
-
-/*
-    Typing/blinking inspired by: https://css-tricks.com/books/volume-i/animate-text-like-typewriter/
- */
-
-#statusbar::after {
-  content: " _";
-  animation: blinking 0.9s steps(3, start) infinite;
-}
-
-@keyframes typing {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-@keyframes blinking {
-  to {
-    visibility: hidden;
-  }
+  pointer-events: none;
 }
 
 #balloons {
-  float: left;
-  width: 50%;
-  height: 45%;
-  background-color: #eee;
+  background-color: var(--darkBG);
+  display: grid;
+  gap: 10px;
+}
+
+#word {
+  background-color: var(--darkBG);
+  
+  /* adaptive font-size source: https://css-tricks.com/simplified-fluid-typography/ */
+  font-size: clamp( 32px, 4vw, 64px );
+  
+  border-bottom: 5px dashed var(--darkHighlight);
+}
+
+#status {
+  background-color: var(--lightHighlight);
+  font-family: monaco, Bitstream Vera Sans Mono, monospace;
+  font-size: 100%;
+  padding: 10px;
 }
 
 .balloon {
-  width: 10vw;
-  height: 10vw;
-  margin: 10px;
-  border: 0px;
-  transition: width 2s, height 2s, transform 2s;
+  border-radius: 50%;
+  border: 3px dashed var(--darkHighlight);
+  transition: opacity 2s;
 }
 
 .balloonGone {
-  width: 0vw;
-  height: 0vw;
+  transition: opacity 2s;
+  opacity: 0;
 }

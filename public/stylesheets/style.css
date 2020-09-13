@@ -1,25 +1,26 @@
 :root {
-  --main-red: #f4424b;
-  --status-red: #fd2130;
+  --darkBG: #555;
+  --lightBG: #aaa; 
+  --text: white;
+  --lightHighlight: crimson;
+  --darkHighlight: darkred;
+  --buttonHover: black;
 }
 
 html,
 body,
-main,
-section {
+main {
   height: 100%;
   margin: 0px;
   padding: 0px;
 }
 
 a {
-  color: #aaa;
+  background-color: var(--lightHighlight);
+  color: var(--text);
   text-decoration: underline overline;
 }
 
-.balloon {
-  height: 400px;
-  width: 400px;
-  border-radius: 50%;
-  border: 1px solid #555;
+a:hover {
+  background-color: var(--buttonHover);
 }

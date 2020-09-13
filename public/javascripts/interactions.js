@@ -1,8 +1,8 @@
 //@ts-check
-/* ESLint global variables information */
-/* global Setup, Status, Messages, englishDict, Alphabet, VisibleWordBoard, StatusBar, createBalloons*/
 
-/* basic constructor of game state */
+let clickSound = new Audio("../data/click.wav");
+
+/* constructor of game state */
 function GameState(visibleWordBoard, sb, socket) {
   this.playerType = null;
   this.MAX_ALLOWED = Setup.MAX_ALLOWED_GUESSES;
@@ -14,93 +14,60 @@ function GameState(visibleWordBoard, sb, socket) {
   this.targetWord = null;
   this.statusBar = sb;
 
-  this.initializeVisibleWordArray = function() {
+  this.initializeVisibleWordArray = function () {
     this.visibleWordArray = new Array(this.targetWord.length);
     this.visibleWordArray.fill(Setup.HIDDEN_CHAR);
   };
 
-  this.getPlayerType = function() {
+  this.getPlayerType = function () {
     return this.playerType;
   };
 
-  this.setPlayerType = function(p) {
-    console.assert(
-      typeof p == "string",
-      "%s: Expecting a string, got a %s",
-      arguments.callee.name,
-      typeof p
-    );
+  this.setPlayerType = function (p) {
     this.playerType = p;
   };
 
-  this.setTargetWord = function(w) {
-    console.assert(
-      typeof w == "string",
-      "%s: Expecting a string, got a %s",
-      arguments.callee.name,
-      typeof w
-    );
+  this.setTargetWord = function (w) {
     this.targetWord = w;
   };
 
-  this.getVisibleWordArray = function() {
+  this.getVisibleWordArray = function () {
     return this.visibleWordArray;
   };
 
-  this.incrWrongGuess = function() {
+  this.incrWrongGuess = function () {
     this.wrongGuesses++;
 
     if (this.whoWon() == null) {
-      //kill a balloon
+      //hide a balloon
       let id = "b" + this.wrongGuesses;
       document.getElementById(id).className += " balloonGone";
-      setTimeout(function() {
-        new Audio("../data/pop.wav").play();
-      }, 500);
     }
   };
 
-  this.whoWon = function() {
+  this.whoWon = function () {
     //too many wrong guesses? Player A (who set the word) won
     if (this.wrongGuesses > Setup.MAX_ALLOWED_GUESSES) {
       return "A";
     }
     //word solved? Player B won
-    if (this.visibleWordArray.indexOf("#") < 0) {
+    if (this.visibleWordArray.indexOf(Setup.HIDDEN_CHAR) < 0) {
       return "B";
     }
     return null; //nobody won yet
   };
 
-  this.revealLetters = function(letter, indices) {
-    console.assert(
-      typeof letter == "string",
-      "%s: Expecting a string, got a %s",
-      arguments.callee.name,
-      typeof letter
-    );
-    console.assert(
-      indices instanceof Array,
-      "%s: Expecting an array",
-      arguments.callee.name
-    );
-
+  this.revealLetters = function (letter, indices) {
     for (let i = 0; i < indices.length; i++) {
       this.visibleWordArray[indices[i]] = letter;
     }
   };
 
-  this.revealAll = function() {
+  this.revealAll = function () {
     this.visibleWordBoard.setWord(this.targetWord);
   };
 
-  this.updateGame = function(clickedLetter) {
-    console.assert(
-      typeof clickedLetter == "string",
-      "%s: Expecting a string, got a %s",
-      arguments.callee.name,
-      typeof clickedLetter
-    );
+  this.updateGame = function (clickedLetter) {
 
     var res = this.alphabet.getLetterInWordIndices(
       clickedLetter,
@@ -131,10 +98,9 @@ function GameState(visibleWordBoard, sb, socket) {
        * letter and not adding an event listener; then
        * replace the original node through some DOM logic
        */
-      var elements = document.querySelectorAll(".alphabet");
-      Array.from(elements).forEach(function(e) {
-        var cloned = e.cloneNode(true);
-        e.parentNode.replaceChild(cloned, e);
+      let elements = document.querySelectorAll(".letter");
+      Array.from(elements).forEach(function (el) {
+        el.style.pointerEvents = "none";
       });
 
       let alertString;
@@ -159,12 +125,13 @@ function GameState(visibleWordBoard, sb, socket) {
 
 function AlphabetBoard(gs) {
   //only initialize for player that should actually be able to use the board
-  this.initialize = function() {
-    var elements = document.querySelectorAll(".alphabet");
-    Array.from(elements).forEach(function(el) {
+  this.initialize = function () {
+    var elements = document.querySelectorAll(".letter");
+    Array.from(elements).forEach(function (el) {
       el.addEventListener("click", function singleClick(e) {
         var clickedLetter = e.target.id;
-        new Audio("../data/click.wav").play();
+        clickSound.play();
+        
         gs.updateGame(clickedLetter);
 
         /*
@@ -207,7 +174,7 @@ function disableAlphabetButtons() {
   var gs = new GameState(vw, sb, socket);
   var ab = new AlphabetBoard(gs);
 
-  socket.onmessage = function(event) {
+  socket.onmessage = function (event) {
     let incomingMsg = JSON.parse(event.data);
 
     //set player type
@@ -289,16 +256,16 @@ function disableAlphabetButtons() {
     }
   };
 
-  socket.onopen = function() {
+  socket.onopen = function () {
     socket.send("{}");
   };
 
   //server sends a close event only if the game was aborted from some side
-  socket.onclose = function() {
+  socket.onclose = function () {
     if (gs.whoWon() == null) {
       sb.setStatus(Status["aborted"]);
     }
   };
 
-  socket.onerror = function() {};
+  socket.onerror = function () { };
 })(); //execute immediately
