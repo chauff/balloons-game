@@ -1,6 +1,10 @@
-# balloons-game
+# Demo game for CSE1500
 
-This game is a demo game. To start it, execute the following steps in the terminal:
+![Board game screenshot](screenshot.png)
+
+This word guesser game is the demo game for the Web technology part of CSE1500, the first-year *Database and Web Technology* course within TU Delft's computer science curriculum. The lecture materials are available [in a separate GitHub repository](https://chauff.github.io/Web-Teaching/). 
+
+To start the game, execute the following steps in the terminal:
 
 ```console
 git clone https://github.com/chauff/balloons-game.git
