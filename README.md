@@ -4,6 +4,8 @@
 
 This word guesser game is the demo game for the Web technology part of CSE1500, the first-year *Database and Web Technology* course within TU Delft's computer science curriculum. The lecture materials are available [in a separate GitHub repository](https://chauff.github.io/Web-Teaching/). 
 
+Make sure that you have [Node.js](https://nodejs.org/en/) installed as well as [git](https://git-scm.com/).
+
 To start the game, execute the following steps in the terminal:
 
 ```console
