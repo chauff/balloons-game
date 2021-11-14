@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/chauff/cse1500-balloons-game/workflows/node.js.yml/badge.svg)](https://github.com/chauff/cse1500-balloons-game/actions)
+[![Action Status](https://github.com/chauff/cse1500-balloons-game/workflows/Build%20and%20Test/badge.svg)](https://github.com/chauff/cse1500-balloons-game/actions)
 
 # Demo game for CSE1500
 
