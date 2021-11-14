@@ -24,3 +24,24 @@ a {
 a:hover {
   background-color: var(--buttonHover);
 }
+
+
+/*
+ * Minimum width/height for this game is 800px x 800px
+ */
+@media (max-width: 800px) or (max-height: 800px) {
+  body::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+    color: greenyellow;
+    padding: 20px;
+    content: "Your screen is too small to play this game.";
+    background-color: black;
+    z-index: 100;
+  }
+}

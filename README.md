@@ -24,6 +24,8 @@ If you want to change the port two actions are required:
 
 A click on the "Play" button brings you to the game. If you are Player 1, you are asked to think of an English word to guess. If you are Player 2, you are asked to start guessing the word Player 1 thought of.
 
+**If you attempt to play in a browser tab whose size is below min. `800px` x `800px` you will see a _Your window is too small to play this game._ message.** The design is not optimized for mobile devices.
+
 The demo code base also shows off how to execute **unit tests** with [Jest](https://jestjs.io/), a JavaScript testing library. If you want to see whether all tests pass, run (after installing it):
 
 ```
@@ -32,7 +34,7 @@ npm test
 
 *Note: you will learn all about testing in a later course; Jest is included here for those that want to know how testing in JavaScript can be done.*
 
-The code is mostly void of [ES6 features](http://es6-features.org/) - the exception being the use of `let` and `const`. This was a conscious choice due to the small amount of time we have to teach JavaScript. **You can of course use any ES6 features in your own code.**
+The code is mostly void of [ES6 features](http://es6-features.org/). This was a conscious choice due to the small amount of time we have to teach JavaScript. **You can of course use any ES6 features in your own code.**
 
 In alignment with the first web technology assignment, the wireframe designs for this game are the [splash screen](https://wireframe.cc/uInPWd) and the [game screen](https://wireframe.cc/z9NaMr).
 
