@@ -1,3 +1,5 @@
+![Build](https://github.com/chauff/balloons-game/workflows/node.js.yml/badge.svg)
+
 # Demo game for CSE1500
 
 ![Board game screenshot](screenshot.png)
