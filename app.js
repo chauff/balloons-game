@@ -1,3 +1,5 @@
+//@ts-check
+
 const express = require("express");
 const http = require("http");
 const websocket = require("ws");
@@ -8,6 +10,10 @@ const messages = require("./public/javascripts/messages");
 const gameStatus = require("./statTracker");
 const Game = require("./game");
 
+if(process.argv.length < 3) {
+  console.log("Error: expected a port as argument (e.g. 'node app.js 3000').");
+  process.exit(1);
+}
 const port = process.argv[2];
 const app = express();
 
@@ -20,7 +26,7 @@ app.get("/", indexRouter);
 const server = http.createServer(app);
 const wss = new websocket.Server({ server });
 
-var websockets = {}; //property: websocket, value: game
+const websockets = {}; //property: websocket, value: game
 
 /*
  * regularly clean up the websockets object
@@ -45,15 +51,12 @@ wss.on("connection", function connection(ws) {
    * two-player game: every two players are added to the same game
    */
   const con = ws;
-  con.id = connectionID++;
+  con["id"] = connectionID++;
   const playerType = currentGame.addPlayer(con);
-  websockets[con.id] = currentGame;
+  websockets[con["id"]] = currentGame;
 
   console.log(
-    "Player %s placed in game %s as %s",
-    con.id,
-    currentGame.id,
-    playerType
+    `Player ${con["id"]} placed in game ${currentGame.id} as ${playerType}`
   );
 
   /*
@@ -86,9 +89,9 @@ wss.on("connection", function connection(ws) {
    *  3. send the message to OP
    */
   con.on("message", function incoming(message) {
-    const oMsg = JSON.parse(message);
+    const oMsg = JSON.parse(message.toString());
 
-    const gameObj = websockets[con.id];
+    const gameObj = websockets[con["id"]];
     const isPlayerA = gameObj.playerA == con ? true : false;
 
     if (isPlayerA) {
@@ -129,13 +132,13 @@ wss.on("connection", function connection(ws) {
      * code 1001 means almost always closing initiated by the client;
      * source: https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
      */
-    console.log(con.id + " disconnected ...");
+    console.log(`${con["id"]} disconnected ...`);
 
-    if (code == "1001") {
+    if (code == 1001) {
       /*
        * if possible, abort the game; if not, the game is already completed
        */
-      const gameObj = websockets[con.id];
+      const gameObj = websockets[con["id"]];
 
       if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
         gameObj.setStatus("ABORTED");

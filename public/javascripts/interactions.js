@@ -1,8 +1,14 @@
+/* eslint-disable no-undef */
 //@ts-check
 
-let clickSound = new Audio("../data/click.wav");
+const clickSound = new Audio("../data/click.wav");
 
-/* constructor of game state */
+/**
+ * Game state object
+ * @param {*} visibleWordBoard
+ * @param {*} sb
+ * @param {*} socket
+ */
 function GameState(visibleWordBoard, sb, socket) {
   this.playerType = null;
   this.MAX_ALLOWED = Setup.MAX_ALLOWED_GUESSES;
@@ -13,130 +19,173 @@ function GameState(visibleWordBoard, sb, socket) {
   this.visibleWordBoard = visibleWordBoard;
   this.targetWord = null;
   this.statusBar = sb;
-
-  this.initializeVisibleWordArray = function () {
-    this.visibleWordArray = new Array(this.targetWord.length);
-    this.visibleWordArray.fill(Setup.HIDDEN_CHAR);
-  };
-
-  this.getPlayerType = function () {
-    return this.playerType;
-  };
-
-  this.setPlayerType = function (p) {
-    this.playerType = p;
-  };
-
-  this.setTargetWord = function (w) {
-    this.targetWord = w;
-  };
-
-  this.getVisibleWordArray = function () {
-    return this.visibleWordArray;
-  };
-
-  this.incrWrongGuess = function () {
-    this.wrongGuesses++;
-
-    if (this.whoWon() == null) {
-      //hide a balloon
-      let id = "b" + this.wrongGuesses;
-      document.getElementById(id).className += " balloonGone";
-    }
-  };
-
-  this.whoWon = function () {
-    //too many wrong guesses? Player A (who set the word) won
-    if (this.wrongGuesses > Setup.MAX_ALLOWED_GUESSES) {
-      return "A";
-    }
-    //word solved? Player B won
-    if (this.visibleWordArray.indexOf(Setup.HIDDEN_CHAR) < 0) {
-      return "B";
-    }
-    return null; //nobody won yet
-  };
-
-  this.revealLetters = function (letter, indices) {
-    for (let i = 0; i < indices.length; i++) {
-      this.visibleWordArray[indices[i]] = letter;
-    }
-  };
-
-  this.revealAll = function () {
-    this.visibleWordBoard.setWord(this.targetWord);
-  };
-
-  this.updateGame = function (clickedLetter) {
-
-    var res = this.alphabet.getLetterInWordIndices(
-      clickedLetter,
-      this.targetWord
-    );
-
-    //wrong guess
-    if (res.length == 0) {
-      this.incrWrongGuess();
-    } else {
-      this.revealLetters(clickedLetter, res);
-    }
-
-    this.alphabet.makeLetterUnAvailable(clickedLetter);
-    this.visibleWordBoard.setWord(this.visibleWordArray);
-
-    var outgoingMsg = Messages.O_MAKE_A_GUESS;
-    outgoingMsg.data = clickedLetter;
-    socket.send(JSON.stringify(outgoingMsg));
-
-    //is the game complete?
-    let winner = this.whoWon();
-
-    if (winner != null) {
-      this.revealAll();
-
-      /* disable further clicks by cloning each alphabet
-       * letter and not adding an event listener; then
-       * replace the original node through some DOM logic
-       */
-      let elements = document.querySelectorAll(".letter");
-      Array.from(elements).forEach(function (el) {
-        el.style.pointerEvents = "none";
-      });
-
-      let alertString;
-      if (winner == this.playerType) {
-        alertString = Status["gameWon"];
-      } else {
-        alertString = Status["gameLost"];
-      }
-      alertString += Status["playAgain"];
-      sb.setStatus(alertString);
-
-      //player B sends final message
-      if (this.playerType == "B") {
-        let finalMsg = Messages.O_GAME_WON_BY;
-        finalMsg.data = winner;
-        socket.send(JSON.stringify(finalMsg));
-      }
-      socket.close();
-    }
-  };
+  this.socket = socket;
 }
 
+/**
+ * Initializes the word array.
+ */
+GameState.prototype.initializeVisibleWordArray = function () {
+  this.visibleWordArray = new Array(this.targetWord.length);
+  this.visibleWordArray.fill(Setup.HIDDEN_CHAR);
+};
+
+/**
+ * Retrieve the player type.
+ * @returns {string} player type
+ */
+GameState.prototype.getPlayerType = function () {
+  return this.playerType;
+};
+
+/**
+ * Set the player type.
+ * @param {string} p player type to set
+ */
+GameState.prototype.setPlayerType = function (p) {
+  this.playerType = p;
+};
+
+/**
+ * Set the word to guess.
+ * @param {string} w word to set
+ */
+GameState.prototype.setTargetWord = function (w) {
+  this.targetWord = w;
+};
+
+/**
+ * Retrieve the word array.
+ * @returns {string[]} array of letters
+ */
+GameState.prototype.getVisibleWordArray = function () {
+  return this.visibleWordArray;
+};
+
+/**
+ * Increase the wrong-guess count.
+ */
+GameState.prototype.incrWrongGuess = function () {
+  this.wrongGuesses++;
+
+  if (this.whoWon() == null) {
+    //hide a balloon
+    const id = "b" + this.wrongGuesses;
+    document.getElementById(id).className += " balloonGone";
+  }
+};
+
+/**
+ * Check if anyone one won.
+ * @returns {string|null} player who whon or null if there is no winner yet
+ */
+GameState.prototype.whoWon = function () {
+  //too many wrong guesses? Player A (who set the word) won
+  if (this.wrongGuesses > Setup.MAX_ALLOWED_GUESSES) {
+    return "A";
+  }
+  //word solved? Player B won
+  if (this.visibleWordArray.indexOf(Setup.HIDDEN_CHAR) < 0) {
+    return "B";
+  }
+  return null; //nobody won yet
+};
+
+/**
+ * Retrieve the positions of the given letter in the target word.
+ * @param {string} letter
+ * @param {number[]} indices
+ */
+GameState.prototype.revealLetters = function (letter, indices) {
+  for (let i = 0; i < indices.length; i++) {
+    this.visibleWordArray[indices[i]] = letter;
+  }
+};
+
+/**
+ * Reveal all letters.
+ */
+GameState.prototype.revealAll = function () {
+  this.visibleWordBoard.setWord(this.targetWord);
+};
+
+/**
+ * Update the game state given the letter that was just clicked.
+ * @param {string} clickedLetter
+ */
+GameState.prototype.updateGame = function (clickedLetter) {
+  const res = this.alphabet.getLetterInWordIndices(
+    clickedLetter,
+    this.targetWord
+  );
+
+  //wrong guess
+  if (res.length == 0) {
+    this.incrWrongGuess();
+  } else {
+    this.revealLetters(clickedLetter, res);
+  }
+
+  this.alphabet.makeLetterUnAvailable(clickedLetter);
+  this.visibleWordBoard.setWord(this.visibleWordArray);
+
+  const outgoingMsg = Messages.O_MAKE_A_GUESS;
+  outgoingMsg.data = clickedLetter;
+  this.socket.send(JSON.stringify(outgoingMsg));
+
+  //is the game complete?
+  const winner = this.whoWon();
+
+  if (winner != null) {
+    this.revealAll();
+
+    /* disable further clicks by cloning each alphabet
+     * letter and not adding an event listener; then
+     * replace the original node through some DOM logic
+     */
+    const elements = document.querySelectorAll(".letter");
+    Array.from(elements).forEach(function (el) {
+      // @ts-ignore
+      el.style.pointerEvents = "none";
+    });
+
+    let alertString;
+    if (winner == this.playerType) {
+      alertString = Status["gameWon"];
+    } else {
+      alertString = Status["gameLost"];
+    }
+    alertString += Status["playAgain"];
+    this.statusBar.setStatus(alertString);
+
+    //player B sends final message
+    if (this.playerType == "B") {
+      let finalMsg = Messages.O_GAME_WON_BY;
+      finalMsg.data = winner;
+      this.socket.send(JSON.stringify(finalMsg));
+    }
+    this.socket.close();
+  }
+};
+
+/**
+ * Initialize the alphabet board.
+ * @param {*} gs
+ */
 function AlphabetBoard(gs) {
   //only initialize for player that should actually be able to use the board
   this.initialize = function () {
-    var elements = document.querySelectorAll(".letter");
+    const elements = document.querySelectorAll(".letter");
     Array.from(elements).forEach(function (el) {
       el.addEventListener("click", function singleClick(e) {
-        var clickedLetter = e.target.id;
+        const clickedLetter = e.target["id"];
         clickSound.play();
-        
+
         gs.updateGame(clickedLetter);
 
         /*
-         * every letter can only be selected once; handling this within
-         * JS is one option, here simply remove the event listener when a click happened
+         * every letter can only be clicked once;
+         * here we remove the event listener when a click happened
          */
         el.removeEventListener("click", singleClick, false);
       });
@@ -144,9 +193,12 @@ function AlphabetBoard(gs) {
   };
 }
 
+/**
+ * Disable the alphabet buttons.
+ */
 function disableAlphabetButtons() {
-  var alphabet = document.getElementById("alphabet");
-  var letterDivs = alphabet.getElementsByTagName("div");
+  const alphabet = document.getElementById("alphabet");
+  const letterDivs = alphabet.getElementsByTagName("div");
   for (let i = 0; i < letterDivs.length; i++) {
     letterDivs.item(i).className += " alphabetDisabled";
   }
@@ -154,7 +206,7 @@ function disableAlphabetButtons() {
 
 //set everything up, including the WebSocket
 (function setup() {
-  var socket = new WebSocket(Setup.WEB_SOCKET_URL);
+  const socket = new WebSocket(Setup.WEB_SOCKET_URL);
 
   /*
    * initialize all UI elements of the game:
@@ -165,14 +217,17 @@ function disableAlphabetButtons() {
    * the GameState object coordinates everything
    */
 
-  var vw = new VisibleWordBoard();
-  var sb = new StatusBar();
+  // @ts-ignore
+  const vw = new VisibleWordBoard();
+  // @ts-ignore
+  const sb = new StatusBar();
 
   //no object, just a function
+  // @ts-ignore
   createBalloons();
 
-  var gs = new GameState(vw, sb, socket);
-  var ab = new AlphabetBoard(gs);
+  const gs = new GameState(vw, sb, socket);
+  const ab = new AlphabetBoard(gs);
 
   socket.onmessage = function (event) {
     let incomingMsg = JSON.parse(event.data);
@@ -196,7 +251,7 @@ function disableAlphabetButtons() {
           if (res == null) {
             promptString = Status["prompt"];
           } else {
-            res = res.toUpperCase();//game is played with uppercase letters
+            res = res.toUpperCase(); //game is played with uppercase letters
 
             if (
               res.length < Setup.MIN_WORD_LENGTH ||
@@ -210,6 +265,7 @@ function disableAlphabetButtons() {
             //TODO: convert the dictionary to uppercase to avoid this extra string conversion cost
             else if (
               Object.prototype.hasOwnProperty.call(
+                // @ts-ignore
                 englishDict,
                 res.toLocaleLowerCase()
               ) == false
@@ -267,5 +323,5 @@ function disableAlphabetButtons() {
     }
   };
 
-  socket.onerror = function () { };
+  socket.onerror = function () {};
 })(); //execute immediately

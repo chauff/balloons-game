@@ -1,6 +1,11 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 //@ts-check
 
-var Status = {
+/**
+ * Object containing all status messages.
+ */
+const Status = {
   gameWon: "Congratulations! You won! ",
   gameLost: "Game over. You lost! ",
   playAgain: "&nbsp;<a href='/play'>Play again!</a>",
@@ -14,6 +19,6 @@ var Status = {
   player2IntroNoTargetYet: `Player 2. Waiting for word to guess. You win if you can guess it within ${Setup.MAX_ALLOWED_GUESSES} tries.`,
   guessed: "Player 2 guessed letter ",
   aborted: "Your gaming partner is no longer available, game aborted. <a href='/play'>Play again!</a>"
-}
+};
 
 

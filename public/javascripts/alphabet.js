@@ -1,10 +1,13 @@
+/* eslint-disable no-unused-vars */
+//@ts-check
+
 const USED = -1; //letter has been used, not available anymore
 const AVAIL = 1; //letter has not been used yet
 
 function Alphabet() {
   this.letters = undefined;
 
-  this.initialize = function() {
+  this.initialize = function () {
     this.letters = {
       A: AVAIL,
       B: AVAIL,
@@ -31,21 +34,33 @@ function Alphabet() {
       W: AVAIL,
       X: AVAIL,
       Y: AVAIL,
-      Z: AVAIL
+      Z: AVAIL,
     };
   };
 
-  //is it a valid letter?
-  this.isLetter = function(letter) {
-    return Object.prototype.hasOwnProperty.call(this.letters,letter);
+  /**
+   * Checks whether the input is a letter.
+   * @param {string} letter
+   * @returns {boolean} true if `letter` is a letter, false otherwise
+   */
+  this.isLetter = function (letter) {
+    return Object.prototype.hasOwnProperty.call(this.letters, letter);
   };
 
-  //is it an available letter?
-  this.isLetterAvailable = function(letter) {
+  /**
+   * Checks whether the input letter is available.
+   * @param {string} letter
+   * @returns {boolean} true if `letter` is available, false otherwise
+   */
+  this.isLetterAvailable = function (letter) {
     return this.isLetter(letter) && this.letters[letter] == AVAIL;
   };
 
-  this.makeLetterUnAvailable = function(letter) {
+  /**
+   * Makes a letter unavailable for further use.
+   * @param {string} letter
+   */
+  this.makeLetterUnAvailable = function (letter) {
     if (this.isLetter(letter)) {
       this.letters[letter] = USED;
 
@@ -54,21 +69,30 @@ function Alphabet() {
     }
   };
 
-  //does the letter appear in the word?
-  this.isLetterIn = function(letter, word) {
+  /**
+   * Checks if letter `letter` appears in word `word`.
+   * @param {*} letter Letter to check
+   * @param {*} word Word to check
+   * @returns {boolean} true if `letter` appears in `word`, false otherwise
+   */
+  this.isLetterIn = function (letter, word) {
     if (!this.isLetter(letter) || !this.isLetterAvailable(letter)) {
       return false;
     }
     return word.indexOf(letter) >= 0;
   };
 
-  //return letter indices in the word
-  this.getLetterInWordIndices = function(letter, word) {
-
+  /**
+   * Retrieves the indices of all occurrences of letter `letter` in word `word`.
+   * @param {*} letter letter to search for in `word`
+   * @param {*} word word to look up `letter` in
+   * @returns {number[]} array of indices of all occurrences of `letter` in `word`
+   */
+  this.getLetterInWordIndices = function (letter, word) {
     let res = [];
 
     if (!this.isLetterIn(letter, word)) {
-      console.log("Letter [%s] is not in target word [%s]!", letter, word);
+      console.log(`Letter ${letter} is not in target word ${word}!`);
       return res;
     }
 
