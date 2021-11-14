@@ -1,30 +1,23 @@
-var express = require("express");
-var http = require("http");
-var websocket = require("ws");
+const express = require("express");
+const http = require("http");
+const websocket = require("ws");
 
-var indexRouter = require("./routes/index");
-var messages = require("./public/javascripts/messages");
+const indexRouter = require("./routes/index");
+const messages = require("./public/javascripts/messages");
 
-var gameStatus = require("./statTracker");
-var Game = require("./game");
+const gameStatus = require("./statTracker");
+const Game = require("./game");
 
-var port = process.argv[2];
-var app = express();
+const port = process.argv[2];
+const app = express();
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 
 app.get("/play", indexRouter);
+app.get("/", indexRouter);
 
-//TODO: move to routes/index
-app.get("/", (req, res) => {
-  res.render("splash.ejs", {
-    gamesInitialized: gameStatus.gamesInitialized,
-    gamesCompleted: gameStatus.gamesCompleted
-  });
-});
-
-var server = http.createServer(app);
+const server = http.createServer(app);
 const wss = new websocket.Server({ server });
 
 var websockets = {}; //property: websocket, value: game
@@ -44,16 +37,16 @@ setInterval(function() {
   }
 }, 50000);
 
-var currentGame = new Game(gameStatus.gamesInitialized++);
-var connectionID = 0; //each websocket receives a unique ID
+let currentGame = new Game(gameStatus.gamesInitialized++);
+let connectionID = 0; //each websocket receives a unique ID
 
 wss.on("connection", function connection(ws) {
   /*
    * two-player game: every two players are added to the same game
    */
-  let con = ws;
+  const con = ws;
   con.id = connectionID++;
-  let playerType = currentGame.addPlayer(con);
+  const playerType = currentGame.addPlayer(con);
   websockets[con.id] = currentGame;
 
   console.log(
@@ -93,10 +86,10 @@ wss.on("connection", function connection(ws) {
    *  3. send the message to OP
    */
   con.on("message", function incoming(message) {
-    let oMsg = JSON.parse(message);
+    const oMsg = JSON.parse(message);
 
-    let gameObj = websockets[con.id];
-    let isPlayerA = gameObj.playerA == con ? true : false;
+    const gameObj = websockets[con.id];
+    const isPlayerA = gameObj.playerA == con ? true : false;
 
     if (isPlayerA) {
       /*
@@ -142,7 +135,7 @@ wss.on("connection", function connection(ws) {
       /*
        * if possible, abort the game; if not, the game is already completed
        */
-      let gameObj = websockets[con.id];
+      const gameObj = websockets[con.id];
 
       if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
         gameObj.setStatus("ABORTED");

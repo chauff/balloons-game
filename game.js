@@ -1,5 +1,5 @@
 /* every game has two players, identified by their WebSocket */
-var game = function(gameID) {
+const game = function(gameID) {
   this.playerA = null;
   this.playerB = null;
   this.id = gameID;
@@ -149,7 +149,7 @@ game.prototype.addPlayer = function(p) {
    * revise the game state
    */
 
-  var error = this.setStatus("1 JOINT");
+  const error = this.setStatus("1 JOINT");
   if (error instanceof Error) {
     this.setStatus("2 JOINT");
   }
