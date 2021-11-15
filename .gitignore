@@ -1,2 +1,4 @@
 node_modules
-coverage
+jest-coverage
+chromedriver.log
+tests_output
