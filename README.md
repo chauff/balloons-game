@@ -36,6 +36,8 @@ npm test
 
 *Note: you will learn all about testing in a later course; tests are included here for those that want to know how testing in JavaScript can be done.*
 
+*Warning: Nightwatch can be brittle at times.*
+
 The code is mostly void of [ES6 features](http://es6-features.org/). This was a conscious choice due to the small amount of time we have to teach JavaScript. **You can of course use any ES6 features in your own code.**
 
 In alignment with the first web technology assignment, the wireframe designs for this game are the [splash screen](https://wireframe.cc/uInPWd) and the [game screen](https://wireframe.cc/z9NaMr).
