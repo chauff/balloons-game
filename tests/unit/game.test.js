@@ -1,4 +1,4 @@
-const game = require("../game");
+const game = require("../../game");
 
 test("valid transition", () => {
   expect(game.prototype.isValidTransition(null, null)).toBe(false);

@@ -28,7 +28,7 @@ A click on the "Play" button brings you to the game. If you are Player 1, you ar
 
 **If you attempt to play in a browser tab whose size is below min. `800px` x `800px` you will see a _Your window is too small to play this game._ message.** The design is not optimized for mobile devices.
 
-The demo code base also shows off how to execute **unit tests** with [Jest](https://jestjs.io/), a JavaScript testing library. If you want to see whether all tests pass, run (after installing it):
+The demo code base also shows off how to execute **unit tests** with [Jest](https://jestjs.io/), a JavaScript testing library, as well as **end-to-end tests** with [Nightwatch](https://nightwatchjs.org/). If you want to see whether all tests pass, run (after installing it):
 
 ```
 npm test
