@@ -11,7 +11,7 @@ const gameStatus = require("./statTracker");
 const Game = require("./game");
 
 if(process.argv.length < 3) {
-  console.log("Error: expected a port as argument (e.g. 'node app.js 3000').");
+  console.log("Error: expected a port as argument (eg. 'node app.js 3000').");
   process.exit(1);
 }
 const port = process.argv[2];
