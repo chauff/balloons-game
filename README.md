@@ -34,7 +34,7 @@ The demo code base also shows off how to execute **unit tests** with [Jest](http
 npm test
 ```
 
-*Note: you will learn all about testing in a later course; Jest is included here for those that want to know how testing in JavaScript can be done.*
+*Note: you will learn all about testing in a later course; tests are included here for those that want to know how testing in JavaScript can be done.*
 
 The code is mostly void of [ES6 features](http://es6-features.org/). This was a conscious choice due to the small amount of time we have to teach JavaScript. **You can of course use any ES6 features in your own code.**
 
