@@ -6,6 +6,9 @@
 
 This word guesser game is the demo game for the Web technology part of CSE1500, the first-year *Database and Web Technology* course within TU Delft's computer science curriculum. The lecture materials are available [in a separate GitHub repository](https://github.com/chauff/cse1500-web-transcripts). 
 
+In alignment with the first web technology assignment, the wireframe designs for this game are the [splash screen](https://wireframe.cc/uInPWd) and the [game screen](https://wireframe.cc/z9NaMr).
+## Installation and starting
+
 Make sure that you have [Node.js](https://nodejs.org/en/) installed as well as [git](https://git-scm.com/).
 
 To start the game, execute the following steps in the terminal:
@@ -28,21 +31,27 @@ A click on the "Play" button brings you to the game. If you are Player 1, you ar
 
 **If you attempt to play in a browser tab whose size is below min. `800px` x `800px` you will see a _Your window is too small to play this game._ message.** The design is not optimized for mobile devices.
 
-The demo code base also shows off how to execute **unit tests** with [Jest](https://jestjs.io/), a JavaScript testing library, as well as **end-to-end tests** with [Nightwatch](https://nightwatchjs.org/). If you want to see whether all tests pass, run (after installing it):
+## Testing
+
+The demo code base also shows off how to execute **unit tests** with [Jest](https://jestjs.io/), a JavaScript testing library, as well as **end-to-end tests** with [Nightwatch](https://nightwatchjs.org/). Open a terminal and use `npm start` to start the application server. Then, if you want to see whether all tests pass, run in another terminal:
 
 ```
 npm test
 ```
 
+The server needs to run for the end-to-end tests; unit tests can run without a running application server.
+
 *Note: you will learn all about testing in a later course; tests are included here for those that want to know how testing in JavaScript can be done.*
 
 *Warning: Nightwatch can be brittle at times.*
 
+## Take ideas from the code
+
+If you are stuck with your board game project, take a look at the source code and take ideas from it - this is not only allowed but encouraged. 
+
 The code is mostly void of [ES6 features](http://es6-features.org/). This was a conscious choice due to the small amount of time we have to teach JavaScript. **You can of course use any ES6 features in your own code.**
 
-In alignment with the first web technology assignment, the wireframe designs for this game are the [splash screen](https://wireframe.cc/uInPWd) and the [game screen](https://wireframe.cc/z9NaMr).
-
-The game required very few public resources. They are listed here:
+## Game resources
 
 - The English word list came from https://github.com/dwyl/english-words
 - [Button click sound](http://www.pachd.com/button.html)
