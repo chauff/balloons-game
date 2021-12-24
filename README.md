@@ -29,7 +29,7 @@ If you want to change the port two actions are required:
 
 A click on the "Play" button brings you to the game. If you are Player 1, you are asked to think of an English word to guess. If you are Player 2, you are asked to start guessing the word Player 1 thought of.
 
-**If you attempt to play in a browser tab whose size is below min. `800px` x `800px` you will see a _Your window is too small to play this game._ message.** You can either increase the browser window size, or zoom out (<kbd>Control</kbd>+<kbd>+</kbd>) or disable the CSS media query via he browser developer tools.
+**If you attempt to play in a browser tab whose size is below min. `800px` x `800px` you will see a _Your window is too small to play this game._ message.** You can either increase the browser window size, or zoom out (<kbd>Control</kbd><kbd>+</kbd>) or disable the CSS media query via the browser developer tools.
 
 ## Testing
 
