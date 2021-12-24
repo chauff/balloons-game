@@ -40,7 +40,7 @@ a:hover {
     font-size: 20px;
     color: greenyellow;
     padding: 20px;
-    content: "Your screen is too small to play this game.";
+    content: "Your window is too small (at least 800x800px is expected) to play this game. Enlarge the browser window or zoom out to play or disable the CSS @media query.";
     background-color: black;
     z-index: 100;
   }

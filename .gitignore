@@ -2,3 +2,4 @@ node_modules
 jest-coverage
 chromedriver.log
 tests_output
+coverage
