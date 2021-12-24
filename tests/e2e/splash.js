@@ -51,7 +51,7 @@ module.exports = {
         function (res) {
           client.assert.equal(
             res.value,
-            '"Your screen is too small to play this game."'
+            '"Your window is too small (at least 800x800px is expected) to play this game. Enlarge the browser window or zoom out to play or disable the CSS @media query."'
           );
         }
       );
